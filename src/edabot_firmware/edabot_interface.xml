@@ -1,0 +1,7 @@
+<library path="edabot_firmware">
+    <class name="edabot_firmware/EdabotInterface" type="edabot_firmware::EdabotInterface" base_class_type="hardware_interface::SystemInterface">
+        <description>
+            Robot Hardware Interface
+        </description>
+    </class>
+</library>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="edabot">
+
+    <ros2_control type="system" name="RobotSystem">
+
+        <hardware>
+            <plugin>edabot_firmware/EdabotInterface</plugin>
+            <param name="port">/dev/ttyACM0</param>
+        </hardware>
+
+        <!-- ros2_control common interfaces -->
+        <joint name="base_to_right_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-1</param>
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="base_to_left_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-1</param>
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+    </ros2_control>
+
+</robot>
