@@ -17,8 +17,18 @@ def generate_launch_description():
         os.path.join(get_package_share_directory("edabot_controller"), "launch", "joy_teleop.launch.py")
     )
 
+    slam = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("edabot_mapping"), "launch", "slam.launch.py")
+    )
+
+    navigation = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("edabot_navigation"), "launch", "navigation.launch.py")
+    )
+
     return LaunchDescription([
         hardware_interface,
         controller,
         joystick,
+        slam,
+        navigation
     ])
