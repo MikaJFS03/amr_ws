@@ -14,7 +14,7 @@ class FriendPose : public rclcpp::Node
     FriendPose()
     : Node("friend_pose")
     {
-        friend_pose_subscription_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/zed/zed_node/pose", 10, std::bind(&FriendPose::friend_pose_callback, this, _1));
+        friend_pose_subscription_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/robot_name/pose", 10, std::bind(&FriendPose::friend_pose_callback, this, _1));
         friend_pointcloud_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/friend_pointcloud", 10);
     }
 

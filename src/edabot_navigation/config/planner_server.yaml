@@ -26,7 +26,7 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: pointcloud od
+        observation_sources: pointcloud od friend
         pointcloud:
           topic: /zed/zed_node/point_cloud/cloud_registered
           max_obstacle_height: 2.0
@@ -40,6 +40,17 @@ global_costmap:
           data_type: "PointCloud2"
         od:
           topic: /detected_object/unperson
+          max_obstacle_height: 2.0
+          min_obstacle_height: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          clearing: True
+          marking: True
+          data_type: "PointCloud2"
+        friend:
+          topic: /friend_pointcloud
           max_obstacle_height: 2.0
           min_obstacle_height: 0.0
           obstacle_max_range: 2.5
