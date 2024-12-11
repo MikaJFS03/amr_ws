@@ -10,8 +10,12 @@ def generate_launch_description():
         launch_arguments={"camera_model": "zed2i"}.items()
     )
 
+    # rtabmap_launch = IncludeLaunchDescription(
+    #     os.path.join(get_package_share_directory("edabot_mapping"), "launch", "rtabmap_rgbd.launch.py")
+    # )
+
     rtabmap_launch = IncludeLaunchDescription(
-        os.path.join(get_package_share_directory("edabot_mapping"), "launch", "rtabmap_rgbd.launch.py")
+        os.path.join(get_package_share_directory("edabot_mapping"), "launch", "rtabmap.launch.py")
     )
 
     return LaunchDescription([
