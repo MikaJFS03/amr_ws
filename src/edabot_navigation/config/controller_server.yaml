@@ -37,7 +37,7 @@ controller_server:
       min_vel_y: 0.0
       max_vel_x: 1.00
       max_vel_y: 0.0
-      max_vel_theta: 1.00
+      max_vel_theta: 0.5
       min_speed_xy: 0.0
       max_speed_xy: 1.00
       min_speed_theta: 0.0
@@ -87,7 +87,18 @@ local_costmap:
       # obstacle_layer:
       #   plugin: "nav2_costmap_2d::ObstacleLayer"
       #   enabled: True
-      #   observation_sources: od_unperson #od_person safety
+      #   observation_sources: od_unperson od_person friend safety
+      #   od_unperson:
+      #     topic: /detected_object/person
+      #     max_obstacle_height: 3.0
+      #     min_obstacle_height: 0.0
+      #     obstacle_max_range: 2.5
+      #     obstacle_min_range: 0.0
+      #     raytrace_max_range: 3.0
+      #     raytrace_min_range: 0.0
+      #     clearing: True
+      #     marking: True
+      #     data_type: "PointCloud2"
       #   od_person:
       #     topic: /detected_object/unperson
       #     max_obstacle_height: 3.0
@@ -99,9 +110,9 @@ local_costmap:
       #     clearing: True
       #     marking: True
       #     data_type: "PointCloud2"
-      #   od_unperson:
-      #     topic: /detected_object/person
-      #     max_obstacle_height: 3.0
+      #   friend:
+      #     topic: /friend_pointcloud
+      #     max_obstacle_height: 2.0
       #     min_obstacle_height: 0.0
       #     obstacle_max_range: 2.5
       #     obstacle_min_range: 0.0
@@ -137,7 +148,7 @@ local_costmap:
         max_obstacle_height: 2.0
         unknown_threshold: 15
         mark_threshold: 0
-        observation_sources: od_unperson #od_person friend safety
+        observation_sources: od_unperson od_person friend safety #pointcloud
         combination_method: 1
         # pointcloud:
         #   topic: /zed/zed_node/point_cloud/cloud_registered

@@ -26,7 +26,7 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: od_unperson #od_person friend safety
+        observation_sources: od_unperson od_person friend safety
         # pointcloud:
         #   topic: /zed/zed_node/point_cloud/cloud_registered
         #   max_obstacle_height: 2.0
