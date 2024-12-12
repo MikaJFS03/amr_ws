@@ -1,4 +1,4 @@
-#sudah multi dan sudah decay (ngambil dari person)
+#sudah multi dan sudah decay
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import PointCloud2, PointField
@@ -9,7 +9,7 @@ import time
 
 class MultiObjectPointCloudNode(Node):
     def __init__(self):
-        super().__init__('unperson_pointcloud')
+        super().__init__('person_pointcloud')
 
         # Subscription ke topik /detected_visual
         self.marker_subscription = self.create_subscription(
@@ -20,11 +20,11 @@ class MultiObjectPointCloudNode(Node):
         )
 
         # Publisher untuk PointCloud2
-        self.pointcloud_publisher = self.create_publisher(PointCloud2, '/detected_object/unperson', 10)
+        self.pointcloud_publisher = self.create_publisher(PointCloud2, '/detected_object/person', 10)
 
         # Buffer untuk menyimpan titik-titik dan timestamp
         self.pointcloud_buffer = []
-        self.pointcloud_lifetime = 2.2  # Waktu tinggal dalam detik
+        self.pointcloud_lifetime = 0.2  # Waktu tinggal dalam detik
 
     def marker_callback(self, msg):
         try:
@@ -34,12 +34,12 @@ class MultiObjectPointCloudNode(Node):
             # Loop melalui semua marker
             for marker in msg.markers:
                 # Filter hanya objek dengan label "person"
-                if marker.text != "person":
+                if marker.text == "person":
                     x = marker.pose.position.x
                     y = marker.pose.position.y
-                    z = marker.pose.position.z + 0.4
+                    z = marker.pose.position.z
 
-                    # Generate silinder untuk objek "unperson"
+                    # Generate silinder untuk objek "person"
                     points = self.generate_cylinder(x, y, z)
                     # Tambahkan titik dan waktu pembuatan ke buffer
                     self.pointcloud_buffer.append((current_time, points))
@@ -57,7 +57,7 @@ class MultiObjectPointCloudNode(Node):
         except Exception as e:
             self.get_logger().error(f"Error processing markers: {e}")
 
-    def generate_cylinder(self, x, y, z, radius=0.33, height=1.0, resolution=0.02):
+    def generate_cylinder(self, x, y, z, radius=0.2, height=1.0, resolution=0.02):
         """Menghasilkan titik-titik 3D dalam bentuk silinder"""
         # Menghitung titik-titik silinder menggunakan Numpy
         angles = np.arange(0, 2 * np.pi, resolution / radius)

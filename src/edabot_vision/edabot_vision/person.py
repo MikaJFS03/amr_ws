@@ -24,7 +24,7 @@ class MultiObjectPointCloudNode(Node):
 
         # Buffer untuk menyimpan titik-titik dan timestamp
         self.pointcloud_buffer = []
-        self.pointcloud_lifetime = 0.2  # Waktu tinggal dalam detik
+        self.pointcloud_lifetime = 0.7  # Waktu tinggal dalam detik
 
     def marker_callback(self, msg):
         try:
@@ -57,7 +57,7 @@ class MultiObjectPointCloudNode(Node):
         except Exception as e:
             self.get_logger().error(f"Error processing markers: {e}")
 
-    def generate_cylinder(self, x, y, z, radius=0.2, height=1.0, resolution=0.02):
+    def generate_cylinder(self, x, y, z, radius=0.4, height=1.0, resolution=0.02):
         """Menghasilkan titik-titik 3D dalam bentuk silinder"""
         # Menghitung titik-titik silinder menggunakan Numpy
         angles = np.arange(0, 2 * np.pi, resolution / radius)

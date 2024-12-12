@@ -37,7 +37,7 @@ class MultiObjectPointCloudNode(Node):
                 if marker.text != "person":
                     x = marker.pose.position.x
                     y = marker.pose.position.y
-                    z = marker.pose.position.z + 0.4
+                    z = marker.pose.position.z
 
                     # Generate silinder untuk objek "unperson"
                     points = self.generate_cylinder(x, y, z)

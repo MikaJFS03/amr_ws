@@ -23,6 +23,7 @@ setup(
             'object_detection = edabot_vision.object_detection:main',
             'person = edabot_vision.person:main',
             'unperson = edabot_vision.unperson:main',
+            'safety = edabot_vision.safety:main',
         ],
     },
 )

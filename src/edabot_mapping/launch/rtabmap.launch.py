@@ -17,8 +17,8 @@ def generate_launch_description():
             # 'args': '--delete_db_on_start',
             'args': '--database_path ~/.ros/rtabmap.db',
             'namespace': '',
-            'rtabmap_viz': 'true',
-            'rviz': 'true',
+            'rtabmap_viz': 'false',
+            'rviz': 'false',
 
             # define mode
             'localization': 'true',
