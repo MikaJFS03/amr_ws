@@ -14,22 +14,25 @@ def generate_launch_description():
     rtabmap_launch = IncludeLaunchDescription(
         os.path.join(rtabmap_launch_dir, "launch", "rtabmap.launch.py"),
         launch_arguments={
-            # 'args': '--delete_db_on_start',
-            'args': '--database_path ~/.ros/rtabmap.db',
+            'args': '--delete_db_on_start',
+            # 'args': '--database_path ~/.ros/rtabmap.db',
             'namespace': '',
-            'rtabmap_viz': 'false',
-            'rviz': 'false',
+            'rtabmap_viz': 'true',
+            'rviz': 'true',
 
             # define mode
-            'localization': 'true',
+            'localization': 'false',
             'icp_odometry': 'false',
             'visual_odometry': 'true',
             'publish_tf_map': 'true',
             'publish_tf_odom': 'true',
+            "wait_imu_to_init": "true",
+
+            # based on rtabmap forum
             'approx_sync': 'false',
-            # 'rgbd_sync': 'false',
-            # 'approx_rgbd_sync': 'false',
-            "wait_imu_to_init": "false",
+            'rgbd_sync': 'true',
+            'approx_rgbd_sync': 'false',
+            # 'topic_queue_size': '2',
 
             # define subscribe parameter
             'depth': 'true',
