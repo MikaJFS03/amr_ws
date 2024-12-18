@@ -16,6 +16,11 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(rclcpp_action REQUIRED)
 
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 add_executable(friend_pose src/friend_pose.cpp)
 ament_target_dependencies(friend_pose rclcpp geometry_msgs sensor_msgs)
 

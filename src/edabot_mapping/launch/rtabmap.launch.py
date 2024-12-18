@@ -14,14 +14,14 @@ def generate_launch_description():
     rtabmap_launch = IncludeLaunchDescription(
         os.path.join(rtabmap_launch_dir, "launch", "rtabmap.launch.py"),
         launch_arguments={
-            'args': '--delete_db_on_start',
-            # 'args': '--database_path ~/.ros/rtabmap.db',
+            # 'args': '--delete_db_on_start',
+            'args': '--database_path ~/.ros/rtabmap.db',
             'namespace': '',
-            'rtabmap_viz': 'true',
-            'rviz': 'true',
+            'rtabmap_viz': 'false',
+            'rviz': 'false',
 
             # define mode
-            'localization': 'false',
+            'localization': 'true',
             'icp_odometry': 'false',
             'visual_odometry': 'true',
             'publish_tf_map': 'true',
