@@ -2,8 +2,13 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="edabot">
 
+    <xacro:arg name="is_sim" default="true"/>
+
     <!-- include ros2_control -->
     <xacro:include filename="$(find edabot_description)/urdf/edabot.ros2_control.xacro"/>
+    
+    <!-- include ros2_control and gazebo -->
+    <xacro:include filename="$(find edabot_description)/urdf/edabot.gazebo.xacro"/>
 
     <!-- some material common properties (color) -->
     <material name="white">
@@ -126,7 +131,7 @@
         <parent link="base_link"/>
         <child link="left_wheel_link"/>
         <origin xyz="0 ${(base_width/2)} ${-((base_height/2) - wheel_radius) - 0.0375}" rpy="-${pi/2} 0 0"/>
-        <axis xyz="0 0 -1"/>
+        <axis xyz="0 0 1"/>
     </joint>
 
     <!-- caster wheel front link and joint -->

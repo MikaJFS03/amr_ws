@@ -4,10 +4,20 @@
 
     <ros2_control type="system" name="RobotSystem">
 
-        <hardware>
-            <plugin>edabot_firmware/EdabotInterface</plugin>
-            <param name="port">/dev/ttyACM0</param>
-        </hardware>
+        <!-- gazebo -->
+        <xacro:if value="$(arg is_sim)">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+        </xacro:if>
+
+        <!-- robot hardware -->
+        <xacro:unless value="$(arg is_sim)">
+            <hardware>
+                <plugin>amar_firmware/AmarInterface</plugin>
+                <param name="port">/dev/ttyACM0</param>
+            </hardware>
+        </xacro:unless>
 
         <!-- ros2_control common interfaces -->
         <joint name="base_to_right_wheel_joint">
