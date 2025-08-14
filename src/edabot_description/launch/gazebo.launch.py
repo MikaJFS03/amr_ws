@@ -12,7 +12,6 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     edabot_description = get_package_share_directory("edabot_description")
     edabot_description_prefix = get_package_prefix("edabot_description")
-    gazebo_ros_dir = get_package_share_directory("gazebo_ros")
 
     model_arg = DeclareLaunchArgument(
         name="model",
