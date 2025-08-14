@@ -65,8 +65,7 @@ def generate_launch_description():
         world_name_arg,
         env_var,
         model_arg,
-        start_gazebo_server,
-        start_gazebo_client,
+        gazebo_launch,
         robot_state_publisher_node,
         spawn_robot
     ])
