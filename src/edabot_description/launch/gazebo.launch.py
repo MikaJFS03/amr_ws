@@ -55,11 +55,22 @@ def generate_launch_description():
     )
 
     spawn_robot = Node(
-        package="gazebo_ros",
-        executable="spawn_entity.py",
-        arguments=["-entity", "edabot", "-topic", "robot_description"],
-        output="screen"
+        package='ros_gz_sim',
+        executable='create',
+        name='spawn_robot',
+        arguments=[
+            '-topic', ['/robot_description'],
+            '-name', 'edabot',
+            '-z', '0.35',
+            '-allow_renaming', 'true',
+            '--ros-args --remap', 'sim_mode:=true'  # Pass xacro arguments directly
+        ],
+        parameters=[{'use_sim_time': True}],
+        output='screen'
     )
+
+    
+
 
     return LaunchDescription([
         world_name_arg,
