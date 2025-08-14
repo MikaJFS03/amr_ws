@@ -45,7 +45,7 @@ def generate_launch_description():
         parameters=[{"robot_description": robot_description, "use_sim_time": True}]
     )
 
-       gazebo_launch = IncludeLaunchDescription(
+    gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ),
