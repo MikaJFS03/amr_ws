@@ -45,17 +45,14 @@ def generate_launch_description():
         parameters=[{"robot_description": robot_description, "use_sim_time": True}]
     )
 
-    start_gazebo_server = IncludeLaunchDescription(
+       gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(gazebo_ros_dir, "launch", "gzserver.launch.py")
+            os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ),
-        launch_arguments={"world": world_path}.items()
-    )
-
-    start_gazebo_client = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(gazebo_ros_dir, "launch", "gzclient.launch.py")
-        )
+        launch_arguments={
+            'gz_args': '-v 4 -r empty.sdf',  # Verbose logging with empty world
+            'on_exit_shutdown': 'true'
+        }.items()
     )
 
     spawn_robot = Node(
