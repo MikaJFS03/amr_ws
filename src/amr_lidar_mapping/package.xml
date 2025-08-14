@@ -1,0 +1,21 @@
+<package format="3">
+  <name>amar_lidar_mapping</name>
+  <version>0.0.1</version>
+  <description>LiDAR + slam_toolbox mapping for AMR</description>
+  <maintainer email="jfarandysalim05@gmail.com">MIKA</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- runtime -->
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <!-- pilih salah satu driver sesuai sensor -->
+  <exec_depend>rplidar_ros</exec_depend>
+  <!-- atau: <exec_depend>urg_node</exec_depend> / <exec_depend>sick_scan_xd</exec_depend> -->
+
+</package>
+

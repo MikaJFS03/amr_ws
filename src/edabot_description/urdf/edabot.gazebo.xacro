@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="edabot">
+
+    <!-- ros2 control transmission -->
+    <transmission name="wheel_right_transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <actuator name="wheel_right_motor" role="actuator_right"/>
+        <joint name="base_to_right_wheel_joint" role="joint_right">
+          <mechanical_reduction>1.0</mechanical_reduction>
+        </joint>
+    </transmission>
+    
+    <transmission name="wheel_left_transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <actuator name="wheel_left_motor" role="actuator_left"/>
+        <joint name="base_to_left_wheel_joint" role="joint_left">
+          <mechanical_reduction>1.0</mechanical_reduction>
+        </joint>
+    </transmission>
+
+    <!-- gazebo references to link -->
+    <gazebo reference="base_footprint">
+    </gazebo>
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="right_wheel_link">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+    <gazebo reference="left_wheel_link">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+    <gazebo reference="caster_wheel_front_link">
+        <material>Gazebo/FlatBlack</material>
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+    </gazebo>
+
+    <gazebo reference="caster_wheel_rear_link">
+        <material>Gazebo/FlatBlack</material>
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+    </gazebo>
+
+    <gazebo reference="zed_camera_link">
+    </gazebo>
+    
+    <!-- ROS2_CONTROL PLUGIN -->
+    <gazebo>
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <robot_param>robot_description</robot_param>
+          <robot_param_node>robot_state_publisher</robot_param_node>
+          <parameters>$(find edabot_controller)/config/edabot_controller.yaml</parameters>
+      </plugin>
+    </gazebo>
+    
+    <!-- LiDAR Gazebo plugin -->
+    <gazebo reference="lidar_link">
+      <sensor type="ray" name="lidar">
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.12</min>
+            <max>12.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <plugin name="gazebo_laser_controller" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=scan</remapping>
+          </ros>
+          <frameName>lidar_link</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+</robot>
