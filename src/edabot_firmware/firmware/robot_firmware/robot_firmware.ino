@@ -29,7 +29,7 @@ double right_wheel_meas_vel = 0, left_wheel_meas_vel = 0;
 double right_wheel_cmd_vel = 0, left_wheel_cmd_vel = 0;
 
 unsigned long last_millis = 0;
-const unsigned long interval = 100;
+const unsigned long interval = 300;
 
 
 /* ********** SETUP FUNCTION ********** */

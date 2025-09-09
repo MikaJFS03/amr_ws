@@ -1,0 +1,41 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+    - Class: rviz_default_plugins/LaserScan
+      Enabled: true
+      Name: LaserScan
+      Topic: /scan
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: Map
+      Topic: /map
+    - Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Name: RobotModel
+      Description Source: "Topic"
+      Robot Description: "robot_description"
+    - Class: rviz_default_plugins/Pose
+      Enabled: true
+      Name: Pose
+      Topic: /slam_toolbox/pose
+  Global Options:
+    Fixed Frame: map
+    Background Color: 48; 48; 48
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Target Frame: base_link
+      Distance: 5

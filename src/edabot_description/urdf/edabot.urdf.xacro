@@ -10,6 +10,8 @@
     <!-- include ros2_control and gazebo -->
     <xacro:include filename="$(find edabot_description)/urdf/edabot.gazebo.xacro"/>
 
+    <xacro:include filename="$(find edabot_description)/urdf/lidar.xacro"/>
+
     <!-- some material common properties (color) -->
     <material name="white">
         <color rgba="1 1 1 1"/>
@@ -200,12 +202,12 @@
         <origin xyz="${-(base_length/2) + (caster_wheel_radius)} ${-(base_width/4)} ${-((base_height/2) - caster_wheel_radius) - 0.0375}" rpy="${pi/2} 0 0"/>
     </joint>
 
-    <!-- zed camera, use zed_wrapper! -->
+    <!-- zed camera, use zed_wrapper! 
     <link name="zed_camera_link" />
     <joint name="zed_camera_joint" type="fixed">
         <parent link="base_link"/>
         <child link="zed_camera_link"/>
         <origin xyz="0.16 0 ${((base_height/2) + 0.14)}" rpy="0 0 0" />
     </joint>
-
+    -->
 </robot>
