@@ -4,9 +4,36 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import IncludeLaunchDescription
 import os
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import Command, LaunchConfiguration
+from launch_ros.parameter_descriptions import ParameterValue
+
 
 
 def generate_launch_description():
+    # Static TF base_footprint -> base_link (z=0, no rotation)
+    static_basefootprint_baselink = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='basefootprint_baselink_broadcaster',
+        arguments=['0', '0', '0', '0', '0', '0', 'base_footprint', 'base_link']
+    )
+    edabot_description_dir = get_package_share_directory("edabot_description")
+
+    model_arg = DeclareLaunchArgument(
+        name="model",
+        default_value=os.path.join(edabot_description_dir, "urdf", "edabot.urdf.xacro"),
+        description="Absolute path to robot URDF file."
+    )
+
+    robot_description = ParameterValue(Command(["xacro ", LaunchConfiguration("model")]), value_type=str)
+
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        parameters=[{"robot_description": robot_description}]
+    )
+
     hardware_interface = IncludeLaunchDescription(
         os.path.join(get_package_share_directory("edabot_firmware"), "launch", "hardware_interface.launch.py")
     )
@@ -20,7 +47,9 @@ def generate_launch_description():
     )
 
     slam = IncludeLaunchDescription(
-        os.path.join(get_package_share_directory("edabot_mapping"), "launch", "slam.launch.py")
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory("edabot_mapping"), "launch", "slam.launch.py")
+        )
     )
 
     navigation = IncludeLaunchDescription(
@@ -41,6 +70,9 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        static_basefootprint_baselink,
+        model_arg,
+        robot_state_publisher,
         hardware_interface,
         #controller,
         # joystick,
@@ -59,6 +91,7 @@ def generate_launch_description():
                 'frame_id': 'laser',
                 'inverted': False,
                 'angle_compensate': True,
+                'queue_size': 20
             }]
         ),
 #
@@ -86,19 +119,19 @@ def generate_launch_description():
         ),
         # Static TF base_link -> laser  (adjust translation/rotation as needed)
         Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='laser_broadcaster',
-        arguments=['0', '0', '0.1', '0', '0', '0', 'base_link', 'laser'],
-            ),
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='laser_broadcaster',
+            arguments=['0', '0', '0.1', '0', '0', '0', 'base_link', 'laser'],
+        ),
 
-        # Static TF odom -> base_link
-        Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='odom_broadcaster',
-        arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link'],
-            ),
+#        # Static TF odom -> base_link
+#        Node(
+#        package='tf2_ros',
+#        executable='static_transform_publisher',
+#        name='odom_broadcaster',
+#        arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link'],
+#            ),
 
         # RViz2
         Node(

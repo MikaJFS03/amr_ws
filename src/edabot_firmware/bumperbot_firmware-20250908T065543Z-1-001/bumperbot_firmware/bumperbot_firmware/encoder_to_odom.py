@@ -4,7 +4,8 @@ from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Int64
-from geometry_msgs.msg import Quaternion, Pose, Twist, Point, Vector3
+from geometry_msgs.msg import Quaternion, Pose, Twist, Point, Vector3, TransformStamped
+from tf2_ros import TransformBroadcaster
 import math
 import time
 
@@ -28,9 +29,11 @@ class EncoderToOdom(Node):
         self.odom_pub = self.create_publisher(Odometry, 'odom', 10)
         self.joint_pub = self.create_publisher(JointState, 'joint_states', 10)
 
+
+    # TF broadcaster for odom -> base_link
+        self.tf_broadcaster = TransformBroadcaster(self)
         self.left_ticks = 0
         self.right_ticks = 0
-
         self.timer = self.create_timer(0.05, self.update)  # 20 Hz
 
     def left_cb(self, msg):
@@ -68,7 +71,7 @@ class EncoderToOdom(Node):
         odom = Odometry()
         odom.header.stamp = self.get_clock().now().to_msg()
         odom.header.frame_id = 'odom'
-        odom.child_frame_id = 'base_link'
+        odom.child_frame_id = 'base_footprint'
         odom.pose.pose.position.x = self.x
         odom.pose.pose.position.y = self.y
         odom.pose.pose.position.z = 0.0
@@ -90,15 +93,26 @@ class EncoderToOdom(Node):
         twist.angular = angular
         odom.twist.twist = twist
         self.odom_pub.publish(odom)
-
+        # Broadcast odom -> base_footprint TF
+        t = TransformStamped()
+        t.header.stamp = odom.header.stamp
+        t.header.frame_id = 'odom'
+        t.child_frame_id = 'base_footprint'
+        t.transform.translation.x = self.x
+        t.transform.translation.y = self.y
+        t.transform.translation.z = 0.0
+        t.transform.rotation.x = qx
+        t.transform.rotation.y = qy
+        t.transform.rotation.z = qz
+        t.transform.rotation.w = qw
+        self.tf_broadcaster.sendTransform(t)
         # Publish joint states
         js = JointState()
         js.header.stamp = odom.header.stamp
         js.name = ['base_to_left_wheel_joint', 'base_to_right_wheel_joint']
         js.position = [self.left_ticks * (2 * math.pi) / self.ticks_per_rev,
-                   self.right_ticks * (2 * math.pi) / self.ticks_per_rev]
+           self.right_ticks * (2 * math.pi) / self.ticks_per_rev]
         self.joint_pub.publish(js)
-
         self.last_time = now
 
     def euler_to_quaternion(self, roll, pitch, yaw):
