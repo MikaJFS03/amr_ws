@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+
+<robot name="bumperbot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Start GZ or Ignition depending on ROS 2 Version -->
+  <xacro:arg name="is_ignition" default="true"/>
+
+  <!-- Load Simulated or Real Hardware Interfaces -->
+  <xacro:arg name="is_sim" default="true"/>
+
+  <!-- Include Gazebo Parameters -->
+  <xacro:include filename="$(find bumperbot_description)/urdf/bumperbot_gazebo.xacro" />
+
+  <!-- Include ros2_control Plugins -->
+  <xacro:include filename="$(find bumperbot_description)/urdf/bumperbot_ros2_control.xacro" />
+
+  <!-- robot properties (International System of Units => using meters and kilograms) -->
+  <xacro:property name="base_length" value="0.75387"/>
+  <xacro:property name="base_width" value="0.4174"/>
+  <xacro:property name="base_height" value="0.2078"/>
+  <xacro:property name="base_mass" value="20.0"/>
+  <xacro:property name="wheel_radius" value="0.075"/>
+  <xacro:property name="wheel_thickness" value="0.075"/>
+  <xacro:property name="wheel_mass" value="0.23"/>
+  <xacro:property name="caster_wheel_radius" value="0.05"/>
+  <xacro:property name="caster_wheel_thickness" value="0.04"/>
+  <xacro:property name="caster_wheel_mass" value="0.05"/>
+
+  <!-- Base Links and Joints -->
+  <link name="base_footprint"/>
+  <link name="base_link">
+        <inertial>
+            <mass value="${base_mass}"/>
+            <inertia ixx="${(1/12) * base_mass * ((base_width * base_width) + (base_height * base_height))}"
+                     ixy="0.0"
+                     ixz="0.0"
+                     iyy="${(1/12) * base_mass * ((base_length * base_length) + (base_height * base_height))}"
+                     iyz="0.0"
+                     izz="${(1/12) * base_mass * ((base_length * base_length) + (base_width * base_width))}"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+        <geometry>
+            <box size="${base_length} ${base_width} ${base_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+    <origin xyz="0 0 0.033" rpy="0 0 0"/>
+  </joint>
+
+  <link name="wheel_right_link">
+    <inertial>
+        <mass value="${wheel_mass}"/>
+        <inertia ixx="${(1/12) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_thickness * wheel_thickness)}"
+                 ixy="0.0"   
+                 ixz="0.0"
+                 iyy="${(1/12) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_thickness * wheel_thickness)}"
+                 iyz="0.0"
+                 izz="${(1/2) * wheel_mass * (wheel_radius * wheel_radius)}"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </inertial>
+    <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="wheel_right_joint" type="continuous">
+    <origin xyz="0 ${-(base_width/2)} ${-((base_height/2) - wheel_radius) - 0.0375}" rpy="${pi/2} 0 0"/>
+    <parent link="base_link" />
+    <child link="wheel_right_link" />
+    <axis xyz="0 0 1" />
+  </joint>
+  
+  <link name="wheel_left_link">
+    <inertial>
+        <mass value="${wheel_mass}"/>
+        <inertia ixx="${(1/12) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_thickness * wheel_thickness)}"
+                 ixy="0.0"   
+                 ixz="0.0"
+                 iyy="${(1/12) * wheel_mass * (3 * wheel_radius * wheel_radius + wheel_thickness * wheel_thickness)}"
+                 iyz="0.0"
+                 izz="${(1/2) * wheel_mass * (wheel_radius * wheel_radius)}"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </inertial>
+
+    <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="wheel_left_joint" type="continuous">
+    <origin xyz="0 ${(base_width/2)} ${-((base_height/2) - wheel_radius) - 0.0375}" rpy="-${pi/2} 0 0"/>
+    <parent link="base_link" />
+    <child link="wheel_left_link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+    <!--edabot caster wheel front link and joint -->
+    <link name="caster_wheel_front_link">
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <inertia ixx="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"
+                     ixy="0.0"   
+                     ixz="0.0"
+                     iyy="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"
+                     iyz="0.0"
+                     izz="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="${caster_wheel_thickness}" radius="${caster_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_caster_wheel_front_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster_wheel_front_link"/>
+        <origin xyz="${(base_length/2) - (caster_wheel_radius)} ${(base_width/4)} ${-((base_height/2) - caster_wheel_radius) - 0.0375}" rpy="${pi/2} 0 0"/>
+    </joint>
+
+    <!-- caster wheel rear link and joint -->
+    <link name="caster_wheel_rear_link">
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <inertia ixx="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"
+                     ixy="0.0"   
+                     ixz="0.0"
+                     iyy="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"
+                     iyz="0.0"
+                     izz="${(2/5) * caster_wheel_mass * (caster_wheel_radius * caster_wheel_radius)}"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="${caster_wheel_thickness}" radius="${caster_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${caster_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_caster_wheel_rear_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster_wheel_rear_link"/>
+        <origin xyz="${-(base_length/2) + (caster_wheel_radius)} ${-(base_width/4)} ${-((base_height/2) - caster_wheel_radius) - 0.0375}" rpy="${pi/2} 0 0"/>
+    </joint>
+
+<!--github caster wheel  <link name="caster_front_link">
+    <inertial>
+      <origin xyz="3.89968128948481E-07 2.40073004698083E-07 0.00219173397061506" rpy="0 0 0" />
+      <mass value="1.44379265037903E-06" />
+      <inertia ixx="7.23075276010246E-11" ixy="-6.10956883467859E-16" ixz="2.22849693525031E-15"
+               iyy="3.8713793085917E-11"  iyz="2.93909858781952E-15"
+               izz="1.00967486676306E-10" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/caster_front_link.STL" />
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_front_joint" type="fixed">
+    <origin xyz="0.04755 0 -0.0275" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="caster_front_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <link name="caster_rear_link">
+    <inertial>
+      <origin xyz="3.8996812895542E-07 2.40073004698083E-07 0.00219173397061509" rpy="0 0 0" />
+      <mass value="1.44379265037902E-06" />
+      <inertia ixx="7.23075276010246E-11" ixy="-6.10956872363424E-16" ixz="2.22849693527207E-15"
+               iyy="3.87137930859167E-11" iyz="2.939098587861E-15"
+               izz="1.00967486676306E-10" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/caster_rear_link.STL" />
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_rear_joint" type="fixed">
+    <origin xyz="-0.04755 0 -0.0275" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="caster_rear_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  -->
+
+
+  <!-- <link name="imu_link">
+    <inertial>
+      <origin xyz="-0.00552433659106688 0.000168210391520346 0.000514000497342681" rpy="0 0 0" />
+      <mass value="0.000528415362211671" />
+      <inertia ixx="1.46176048428261E-08" ixy="1.40015117949421E-10" ixz="-1.99633872937403E-12"
+               iyy="8.59662482954888E-09" iyz="7.52375112767959E-12"
+               izz="2.30279421279312E-08" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/imu_link.STL" />
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/imu_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0.0698986241758014" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <axis xyz="0 0 0" />
+  </joint> -->
+
+  <link name="laser_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.073084435549317" />
+      <inertia ixx="1.96074931730795E-05" ixy="-3.62091076640009E-07" ixz="4.28230084046735E-07"
+               iyy="2.40983835136327E-05" iyz="1.50180909250652E-08"
+               izz="4.14184164228595E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/laser_link.STL" />
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://bumperbot_description/meshes/laser_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0.16 0 ${((base_height/2) + 0.03)}" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="laser_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <!-- some material common properties (color) -->
+  <material name="white">
+      <color rgba="1 1 1 1"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+  <material name="silver">
+    <color rgba="0.79 0.82 0.93 1"/>
+  </material>
+  <material name="dark_grey">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
+
+</robot>
