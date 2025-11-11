@@ -190,7 +190,7 @@ def generate_launch_description():
     )
 
     delayed_lifecycle_manager = TimerAction(
-        period=8.0,
+        period=1.0,
         actions=[lifecycle_manager]
     )
     
@@ -207,6 +207,17 @@ def generate_launch_description():
         )
     ),
 )
+
+    localization = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+        os.path.join(
+            get_package_share_directory("bumperbot_localization"),
+            "launch",
+            "global_localization.launch.py"
+        )
+    ),
+)
+
     # create a Node entry for the auto-localizer script (adjust path)
     auto_localizer = Node(
     package='bumperbot_localization',         # or your own package
@@ -221,29 +232,30 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Add declared args
+    ld.add_action(laser_driver)
     ld.add_action(declare_map_yaml)
     ld.add_action(declare_use_sim_time)
     ld.add_action(declare_rviz)
     ld.add_action(declare_autostart)
 
     # Add nodes/includes
+    
     ld.add_action(keyboard_teleop)
     ld.add_action(hardware_interface_launch)
-    ld.add_action(laser_driver)
+    
 #    ld.add_action(slamtb)
     ld.add_action(controller_include)
     ld.add_action(joystick_include)
     ld.add_action(navigation_include)
-    ld.add_action(map_server)
-    ld.add_action(amcl)
+#    ld.add_action(map_server)
+#    ld.add_action(amcl)
     ld.add_action(rviz)
-    ld.add_action(delayed_lifecycle_manager)
-    # then start it with a TimerAction after lifecycle manager (period ~8s)
-    ld.add_action(TimerAction(
-    period=8.0,
-    actions=[auto_localizer]
-    ))
+#    ld.add_action(delayed_lifecycle_manager)
+    ld.add_action(localization)
+# then start it with a TimerAction after lifecycle manager (period ~8s)
+#    ld.add_action(auto_localizer)
     # optional: log the chosen map path at startup
-    ld.add_action(LogInfo(msg=["Using map: ", map_yaml]))
+#    ld.add_action(LogInfo(msg=["Using map: ", map_yaml]))
 
     return ld
+    

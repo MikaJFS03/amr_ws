@@ -44,7 +44,7 @@ def generate_launch_description():
     
     use_sim_time_arg = DeclareLaunchArgument(
         "use_sim_time",
-        default_value="True",
+        default_value="False",
     )
     use_simple_controller_arg = DeclareLaunchArgument(
         "use_simple_controller",
@@ -56,11 +56,11 @@ def generate_launch_description():
     )
     wheel_radius_arg = DeclareLaunchArgument(
         "wheel_radius",
-        default_value="0.033",
+        default_value="0.075",
     )
     wheel_separation_arg = DeclareLaunchArgument(
         "wheel_separation",
-        default_value="0.17",
+        default_value="0.41",
     )
     wheel_radius_error_arg = DeclareLaunchArgument(
         "wheel_radius_error",

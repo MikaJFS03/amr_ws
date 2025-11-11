@@ -12,7 +12,7 @@ def generate_launch_description():
 
     use_slam_arg = DeclareLaunchArgument(
         "use_slam",
-        default_value="false"
+        default_value="true"
     )
 
     hardware_interface = IncludeLaunchDescription(
@@ -25,7 +25,7 @@ def generate_launch_description():
 
     laser_driver = Node(
             package="rplidar_ros",
-            executable="rplidar_node",
+            executable="rplidar_composition",
             name="rplidar_node",
             parameters=[os.path.join(
                 get_package_share_directory("bumperbot_bringup"),
@@ -58,10 +58,15 @@ def generate_launch_description():
         }.items()
     )
 
-#    imu_driver_node = Node(
-#        package="bumperbot_firmware",
-#        executable="mpu6050_driver.py"
-#    )
+    calibrate_imu = Node(
+        package="bumperbot_firmware",
+        executable="load_offsets.py"
+    )
+
+    imu_driver_node = Node(
+        package="bumperbot_firmware",
+        executable="mpu6050_driver.py"
+    )
 
     localization = IncludeLaunchDescription(
         os.path.join(
@@ -103,8 +108,9 @@ def generate_launch_description():
         laser_driver,
         controller,
         joystick,
-#        imu_driver_node,
-        localization,
+        #calibrate_imu,
+        imu_driver_node,
+        #localization,
         slam,
         navigation
     ])
