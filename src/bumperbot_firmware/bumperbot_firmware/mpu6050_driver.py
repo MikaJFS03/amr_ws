@@ -256,7 +256,7 @@ class BNO055_Driver(Node):
 
 def main():
     rclpy.init()
-    node = BNO055_Driver()
+    node = BNO055_Driver(i2c_bus=7)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

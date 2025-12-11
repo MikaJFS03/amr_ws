@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import smbus, time, os, sys
 
-BUS = 1         # <--- set to your I2C bus
+BUS = 7         # <--- set to your I2C bus
 ADDR = 0x28     # <--- set to your BNO address
 OPR_MODE = 0x3D
 CONFIG_MODE = 0x00

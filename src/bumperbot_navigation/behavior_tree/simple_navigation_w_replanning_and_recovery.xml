@@ -8,7 +8,7 @@
                 <FollowPath path="{path}" controller_id="FollowPath"/>
             </PipelineSequence>
             <Sequence>
-                <Spin spin_dist="1.57"/>
+                <Spin spin_dist="0.2"/>
                 <Wait wait_duration="5.0"/>
                 <BackUp backup_dist="0.30" backup_speed="0.15"/>
             </Sequence>

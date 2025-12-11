@@ -134,6 +134,11 @@ def generate_launch_description():
         output='screen'
     )
 
+    imu_driver_node = Node(
+        package="bumperbot_firmware",
+        executable="mpu6050_driver.py"
+    )
+
 
     # -------------------
     # RViz (optional)
@@ -172,6 +177,7 @@ def generate_launch_description():
     ld.add_action(navigation_include)
     ld.add_action(rviz)
     ld.add_action(slam)
+    ld.add_action(imu_driver_node)
     # optional: log the chosen map path at startup
     ld.add_action(LogInfo(msg=["Using map: ", map_yaml]))
 

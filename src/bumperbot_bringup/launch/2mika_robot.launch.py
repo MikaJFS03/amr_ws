@@ -218,6 +218,12 @@ def generate_launch_description():
     ),
 )
 
+    imu_driver_node = Node(
+        package="bumperbot_firmware",
+        executable="mpu6050_driver.py"
+    )
+
+
     # create a Node entry for the auto-localizer script (adjust path)
     auto_localizer = Node(
     package='bumperbot_localization',         # or your own package
@@ -252,6 +258,8 @@ def generate_launch_description():
     ld.add_action(rviz)
 #    ld.add_action(delayed_lifecycle_manager)
     ld.add_action(localization)
+    ld.add_action(imu_driver_node)
+    
 # then start it with a TimerAction after lifecycle manager (period ~8s)
 #    ld.add_action(auto_localizer)
     # optional: log the chosen map path at startup
